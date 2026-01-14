@@ -1,0 +1,1288 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Materias - Diseño Gráfico</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #e2e8f0;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #f1f5f9;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Search Box */
+.search-box {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    border: 1px solid #334155;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 1em;
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    color: #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-input::placeholder {
+    color: #64748b;
+}
+
+/* Filters */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 10px 18px;
+    border: 2px solid #334155;
+    background: #0f172a;
+    color: #cbd5e1;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.filter-btn:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.boton-estilizado {
+    display: inline-block;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.boton-estilizado:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* Stats */
+.stats {
+    background: rgba(59, 130, 246, 0.15);
+    color: #f1f5f9;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    font-size: 0.95em;
+}
+
+/* Section Headers */
+.section {
+    margin-bottom: 24px;
+}
+
+.section-header {
+    background: #1e293b;
+    padding: 16px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #334155;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.section-header:hover {
+    background: #293548;
+    border-color: #3b82f6;
+}
+
+.section-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-count {
+    background: #334155;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    color: #cbd5e1;
+}
+
+.section-arrow {
+    font-size: 1.3em;
+    transition: transform 0.3s ease;
+    color: #64748b;
+}
+
+.section-header.active .section-arrow {
+    transform: rotate(180deg);
+}
+
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.section-content.active {
+    max-height: 10000px;
+}
+
+/* Results Grid */
+.results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 16px;
+    padding: 16px 0;
+}
+
+@media (max-width: 1100px) {
+    .results {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Materia Card */
+.materia-card {
+    background: #1e293b;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.materia-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.materia-header {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f172a;
+    transition: background 0.3s ease;
+    user-select: none;
+}
+
+.materia-header:hover {
+    background: #1a2332;
+}
+
+.materia-info {
+    flex: 1;
+}
+
+.materia-nombre {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.materia-codigo {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85em;
+    display: inline-block;
+}
+
+.expand-icon {
+    font-size: 1.4em;
+    transition: transform 0.3s ease;
+    color: #64748b;
+    margin-left: 16px;
+}
+
+.materia-card.expanded .expand-icon {
+    transform: rotate(180deg);
+    color: #3b82f6;
+}
+
+/* Grupos Container */
+.grupos-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding: 0 20px;
+}
+
+.materia-card.expanded .grupos-container {
+    max-height: 2000px;
+    padding: 0 20px 20px 20px;
+}
+
+.grupo {
+    background: #0f172a;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-top: 12px;
+    border-left: 3px solid #3b82f6;
+    transition: all 0.3s ease;
+}
+
+.grupo:hover {
+    background: #1a2332;
+    border-left-color: #60a5fa;
+}
+
+.grupo-header {
+    font-weight: 600;
+    color: #3b82f6;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+}
+
+.horario-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 0.9em;
+}
+
+.dia {
+    font-weight: 600;
+    color: #cbd5e1;
+    min-width: 100px;
+}
+
+.hora {
+    color: #94a3b8;
+}
+
+.profesor {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #334155;
+    color: #94a3b8;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    color: #cbd5e1;
+    font-size: 1.2em;
+    margin-top: 60px;
+    padding: 40px;
+    background: #1e293b;
+    border-radius: 12px;
+    border: 2px dashed #334155;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.materia-card {
+    animation: fadeIn 0.3s ease;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Consulta de Materias - Diseño Gráfico UNAL</h1>
+
+        <div class="stats" id="stats">
+            Cargando datos...
+        </div>
+
+        
+
+        <div class="search-box">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="searchInput" 
+                placeholder="Busca por código (ej: 2016080) o nombre de materia (ej: fotografía)..."
+            >
+            
+            <div class="filters">
+                <a href="https://unalspa.pages.dev/" class="boton-estilizado">Ir a SPA</a>
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="taller">Talleres</button>
+                <button class="filter-btn" data-filter="historia">Historia</button>
+                <button class="filter-btn" data-filter="fundamentos">Fundamentos</button>
+            </div>
+        </div>
+
+        <div class="results" id="results"></div>
+    </div>
+<button onclick="downloadJSON()" style="position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999;">
+    💾 Exportar para SPA
+</button>
+  <script>
+function downloadJSON() {
+    const blob = new Blob([JSON.stringify(materias, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'horarios-' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('✅ Archivo JSON descargado. Ahora súbelo en el SPA.');
+}
+</script>
+    <script>
+        // Datos de las materias extraídos del PDF
+        const materias = [
+            {
+                codigo: "2016080",
+                nombre: "Aplicaciones gráficas tridimensionales",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
+                    profesor: "John Freddy Umaña"
+                }]
+            },
+            {
+                codigo: "2022166",
+                nombre: "Arte rupestre muisca",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "17:00", fin: "19:00"}, {dia: "JUEVES", inicio: "17:00", fin: "19:00"}],
+                    profesor: "Federman Contreras"
+                }]
+            },
+            {
+                codigo: "2016061",
+                nombre: "Bocetación e ilustración",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Federman Contreras"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Juan De La Cruz Sanchez Ramirez"
+                    }
+                ]
+            },
+            {
+                codigo: "2022182",
+                nombre: "Diseño gráfico y concepto publicitario",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
+                    profesor: "Jose Jairo Vargas Castillo"
+                }]
+            },
+            {
+                codigo: "2016063",
+                nombre: "Esquemática básica",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "Luis Enrique Pedriza"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "JUEVES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "Luis Enrique Pedriza"
+                    }
+                ]
+            },
+            {
+                codigo: "2016064",
+                nombre: "Estética y teoría de la imagen",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "11:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "11:00", fin: "13:00"}],
+                        profesor: "Federman Contreras (Diseño Gráfico)"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "18:00"}],
+                        profesor: "Juan Diego Antonio Pablo Caicedo Gonzalez (Cine y TV)"
+                    },
+                    {
+                        numero: 3,
+                        horarios: [{dia: "JUEVES", inicio: "14:00", fin: "18:00"}],
+                        profesor: "Ana María Lozano (Artes Plásticas)"
+                    }
+                ]
+            },
+            {
+                codigo: "2016065",
+                nombre: "Expresión visual",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "18:00"}],
+                        profesor: "Jose Jairo Vargas Castillo"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "18:00"}],
+                        profesor: "Richar Muñoz Muñoz"
+                    }
+                ]
+            },
+            {
+                codigo: "2016066",
+                nombre: "Figura humana y representación",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "16:00", fin: "19:00"}, {dia: "MIÉRCOLES", inicio: "16:00", fin: "19:00"}],
+                        profesor: "Andrés Díaz Muñoz"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Andrés Díaz Muñoz"
+                    }
+                ]
+            },
+            {
+                codigo: "2016068",
+                nombre: "Fotografía I",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "JUEVES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "Nubia Angelica Caballero Pedraza (Cine y TV)"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Omaira Abadia Rey (Artes Plásticas)"
+                    },
+                    {
+                        numero: 3,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Nubia Angelica Caballero Pedraza (Cine y TV)"
+                    },
+                    {
+                        numero: 4,
+                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Juan Ricardo Rodriguez Ramirez (Diseño Gráfico)"
+                    },
+                    {
+                        numero: 5,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Juan Ricardo Rodriguez Ramirez (Diseño Gráfico)"
+                    },
+                    {
+                        numero: 6,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Grupo Artes Plásticas"
+                    },
+                    {
+                        numero: 7,
+                        horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Grupo Artes Plásticas"
+                    }
+                ]
+            },
+            {
+                codigo: "2005208",
+                nombre: "Fotografía II",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Ana Adarve (Artes Plásticas y Diseño Gráfico)"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Ana Adarve (Artes Plásticas y Diseño Gráfico)"
+                    },
+                    {
+                        numero: 3,
+                        horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Guillermo Arturo Santos Saenz (Diseño Gráfico)"
+                    },
+                    {
+                        numero: 4,
+                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "Pilar Suescún Monroy (Diseño Gráfico)"
+                    }
+                ]
+            },
+            {
+                codigo: "2016062",
+                nombre: "Fotografía III",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Clara Victoria Forero Murillo"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Guillermo Arturo Santos Saenz"
+                    }
+                ]
+            },
+            {
+                codigo: "2016069",
+                nombre: "Fundamentos tecnológicos: Color y producción",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MIÉRCOLES", inicio: "9:00", fin: "11:00"}, {dia: "VIERNES", inicio: "9:00", fin: "11:00"}],
+                        profesor: "Antonio Marquez Bulla"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MARTES", inicio: "11:00", fin: "13:00"}, {dia: "VIERNES", inicio: "11:00", fin: "13:00"}],
+                        profesor: "Antonio Marquez Bulla"
+                    }
+                ]
+            },
+            {
+                codigo: "2016070",
+                nombre: "Fundamentos tecnológicos: Formatos y medidas",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "Antonio Marquez Bulla"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "JUEVES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "Antonio Marquez Bulla"
+                    }
+                ]
+            },
+            {
+                codigo: "2016071",
+                nombre: "Fundamentos tecnológicos: Tipometría",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MIÉRCOLES", inicio: "8:00", fin: "10:00"}, {dia: "VIERNES", inicio: "8:00", fin: "10:00"}],
+                        profesor: "Felipe Hernando Tadeo Padilla Bruges"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MIÉRCOLES", inicio: "7:00", fin: "9:00"}, {dia: "VIERNES", inicio: "7:00", fin: "9:00"}],
+                        profesor: "Antonio Marquez Bulla"
+                    }
+                ]
+            },
+            {
+                codigo: "2016074",
+                nombre: "Historia del diseño gráfico: Contextos del diseño en Colombia",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "9:00", fin: "11:00"}, {dia: "JUEVES", inicio: "9:00", fin: "11:00"}],
+                    profesor: "Carlos Arturo Acosta De Greiff"
+                }]
+            },
+            {
+                codigo: "2016075",
+                nombre: "Historia del diseño gráfico: De la imagen a la palabra",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "11:00", fin: "13:00"}, {dia: "JUEVES", inicio: "11:00", fin: "13:00"}],
+                    profesor: "Miladys Milagros Alvarez Lopez"
+                }]
+            },
+            {
+                codigo: "2016076",
+                nombre: "Historia del diseño gráfico: De las artes al diseño",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "LUNES", inicio: "14:00", fin: "16:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "16:00"}],
+                    profesor: "Carlos Arturo Acosta De Greiff"
+                }]
+            },
+            {
+                codigo: "2016077",
+                nombre: "Historia del diseño gráfico: De los ismos a los medios",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "7:00", fin: "9:00"}, {dia: "JUEVES", inicio: "7:00", fin: "9:00"}],
+                        profesor: "Carlos Arturo Acosta De Greiff"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MIÉRCOLES", inicio: "9:00", fin: "11:00"}, {dia: "VIERNES", inicio: "9:00", fin: "11:00"}],
+                        profesor: "Miladys Milagros Alvarez Lopez"
+                    }
+                ]
+            },
+            {
+                codigo: "2016078",
+                nombre: "Historia del diseño gráfico: Sociedad, cultura y diseño en Latinoamérica",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "9:00", fin: "11:00"}, {dia: "JUEVES", inicio: "9:00", fin: "11:00"}],
+                    profesor: "Miladys Milagros Alvarez Lopez"
+                }]
+            },
+            {
+                codigo: "2016079",
+                nombre: "Imagen dinámica",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Wilson Andrés Borja Morroquín"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Andrea Sánchez Guerrero"
+                    }
+                ]
+            },
+            {
+                codigo: "2022229",
+                nombre: "Narración gráfica",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
+                    profesor: "Bernardo Rincon Martinez"
+                }]
+            },
+            {
+                codigo: "2016081",
+                nombre: "Palabra e imagen",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "9:00", fin: "13:00"}],
+                        profesor: "Andrés Felipe Parra Vela"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "JUEVES", inicio: "9:00", fin: "13:00"}],
+                        profesor: "María Manuela Buitrago Villamizar"
+                    }
+                ]
+            },
+            {
+                codigo: "2016083",
+                nombre: "Producción en medios digitales",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "9:00", fin: "11:00"}, {dia: "JUEVES", inicio: "9:00", fin: "11:00"}],
+                        profesor: "Richar Leonardo Munoz Muñoz"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MARTES", inicio: "11:00", fin: "13:00"}, {dia: "JUEVES", inicio: "11:00", fin: "13:00"}],
+                        profesor: "Richar Leonardo Munoz Muñoz"
+                    }
+                ]
+            },
+            {
+                codigo: "2016084",
+                nombre: "Producción en medios impresos",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "MARTES", inicio: "7:00", fin: "9:00"}, {dia: "JUEVES", inicio: "7:00", fin: "9:00"}],
+                        profesor: "Felipe Hernando Tadeo Padilla Bruges"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "MARTES", inicio: "9:00", fin: "11:00"}, {dia: "JUEVES", inicio: "9:00", fin: "11:00"}],
+                        profesor: "Felipe Hernando Tadeo Padilla Bruges"
+                    }
+                ]
+            },
+            {
+                codigo: "2016086",
+                nombre: "Seminario de investigación y proyecto",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "JUEVES", inicio: "10:00", fin: "12:00"}],
+                    profesor: "Heliumen Alberto Triana Parrado"
+                }]
+            },
+            {
+                codigo: "2016087",
+                nombre: "Taller de énfasis en ilustración",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
+                    profesor: "Bernardo Rincon Martinez"
+                }]
+            },
+            {
+                codigo: "2016088",
+                nombre: "Taller de énfasis en ilustración II",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
+                    profesor: "Carlos Martin Riaño Moncada"
+                }]
+            },
+            {
+                codigo: "2016093",
+                nombre: "Taller de énfasis en animación y narrativas audiovisuales",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "9:00", fin: "12:00"}, {dia: "JUEVES", inicio: "9:00", fin: "12:00"}],
+                    profesor: "Wilson Andrés Borja Morroquín"
+                }]
+            },
+            {
+                codigo: "2016094",
+                nombre: "Taller de énfasis en animación y narrativas audiovisuales II",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}],
+                    profesor: "Andrea Sánchez Guerrero"
+                }]
+            },
+            {
+                codigo: "2016091",
+                nombre: "Taller de énfasis en multimedia e imagen digital",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}],
+                    profesor: "Mónica Forero"
+                }]
+            },
+            {
+                codigo: "2016092",
+                nombre: "Taller de énfasis en multimedia e imagen digital II",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
+                    profesor: "Mónica Forero"
+                }]
+            },
+            {
+                codigo: "2016090",
+                nombre: "Taller de énfasis en imagen fotográfica II",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
+                    profesor: "Pilar Suescún Monroy"
+                }]
+            },
+            {
+                codigo: "2016097",
+                nombre: "Taller de énfasis en tipografía y diagramación",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
+                    profesor: "César Arturo Puertas Céspedes"
+                }]
+            },
+            {
+                codigo: "2016098",
+                nombre: "Taller de énfasis en tipografía y diagramación II",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
+                    profesor: "César Arturo Puertas Céspedes"
+                }]
+            },
+            {
+                codigo: "2025646",
+                nombre: "Caligrafía para todos",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "LUNES", inicio: "14:00", fin: "18:00"}],
+                    profesor: "Cesar Arturo Puertas Céspedes"
+                }]
+            },
+            {
+                codigo: "2016099",
+                nombre: "Taller forma y estructura",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}, {dia: "VIERNES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "Jose Jairo Vargas Castillo"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Marco Aurelio Cardenas Cardozo"
+                    }
+                ]
+            },
+            {
+                codigo: "2016100",
+                nombre: "Taller identidad e imagen coordinada",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}, {dia: "VIERNES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "Marco Aurelio Cardenas Cardozo"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Jose Jairo Vargas Castillo"
+                    },
+                    {
+                        numero: 3,
+                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}, {dia: "VIERNES", inicio: "7:00", fin: "10:00"}],
+                        profesor: "María Manuela Buitrago Villamizar"
+                    }
+                ]
+            },
+            {
+                codigo: "2016101",
+                nombre: "Taller orientación y diseño de información",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Andrés Felipe Parra Vela"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Jorge Andrés Rodríguez Malagón"
+                    }
+                ]
+            },
+            {
+                codigo: "2016102",
+                nombre: "Taller signo y letra",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Nelson Orlando Beltrán Duque"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Juan De La Cruz Sanchez Ramirez"
+                    }
+                ]
+            },
+            {
+                codigo: "2016103",
+                nombre: "Taller tipografía: composición y diagramación",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}, {dia: "VIERNES", inicio: "14:00", fin: "17:00"}],
+                        profesor: "Nelson Orlando Beltrán Duque"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                        profesor: "Marco Aurelio Cardenas Cardozo"
+                    }
+                ]
+            },
+            {
+                codigo: "2016104",
+                nombre: "Teoría de la mirada",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "JUEVES", inicio: "14:00", fin: "18:00"}],
+                    profesor: "Gabriela Alejandra González"
+                }]
+            },
+            {
+                codigo: "2016105",
+                nombre: "Teorías de la comunicación visual",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "11:00", fin: "13:00"}, {dia: "JUEVES", inicio: "11:00", fin: "13:00"}],
+                    profesor: "Federman Contreras"
+                }]
+            },
+            {
+                codigo: "2016106",
+                nombre: "Teorías de la comunicación visual II",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "VIERNES", inicio: "14:00", fin: "18:00"}],
+                    profesor: "Gabriela Alejandra González"
+                }]
+            },
+            {
+                codigo: "2015305",
+                nombre: "Trabajo de Grado - Asignaturas de Posgrado",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "VIERNES", inicio: "18:00", fin: "20:00"}],
+                    profesor: "Carlos Martin Riaño Moncada"
+                }]
+            },
+            {
+                codigo: "2015304",
+                nombre: "Trabajo de Grado",
+                grupos: [
+                    {
+                        numero: 1,
+                        horarios: [{dia: "JUEVES", inicio: "8:00", fin: "10:00"}],
+                        profesor: "Carlos Martin Riaño Moncada (Pasantía)"
+                    },
+                    {
+                        numero: 2,
+                        horarios: [{dia: "VIERNES", inicio: "18:00", fin: "20:00"}],
+                        profesor: "Carlos Martin Riaño Moncada"
+                    },
+                    {
+                        numero: 3,
+                        horarios: [{dia: "VIERNES", inicio: "19:00", fin: "20:00"}],
+                        profesor: "César Arturo Puertas Céspedes"
+                    },
+                    {
+                        numero: 4,
+                        horarios: [{dia: "VIERNES", inicio: "20:00", fin: ":2100"}],
+                        profesor: "Guillermo Arturo Santos Saenz"
+                    },
+                    {
+                        numero: 5,
+                        horarios: [{dia: "VIERNES", inicio: "19:00", fin: "20:00"}],
+                        profesor: "Bernardo Rincon Martinez"
+                    },
+                    {
+                        numero: 6,
+                        horarios: [{dia: "VIERNES", inicio: "18:00", fin: "20:00"}],
+                        profesor: "Antonio Marquez Bulla"
+                    }
+                ]
+            },
+            {
+                codigo: "2022180",
+                nombre: "Diseño, arte e ideología",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "VIERNES", inicio: "14:00", fin: "17:00"}],
+                    profesor: "Juan De La Cruz Sanchez Ramirez"
+                }]
+            },
+            {
+                codigo: "2022181",
+                nombre: "Diseño de portafolio",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
+                    profesor: "Marco Aurelio Cardenas Cardozo"
+                }]
+            },
+            {
+                codigo: "2027093",
+                nombre: "Diseño Editorial/Libros",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "14:00", fin: "16:00"}],
+                    profesor: "Nelson Orlando Beltrán Duque"
+                }]
+            },
+            {
+                codigo: "2029484",
+                nombre: "Gestión Estratégica del Diseño",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "VIERNES", inicio: "7:00", fin: "10:00"}],
+                    profesor: "Richar Leonardo Muñoz Muñoz"
+                }]
+            },
+            {
+                codigo: "2026629",
+                nombre: "Fundamentación en código para web",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "JUEVES", inicio: "7:00", fin: "9:00"}],
+                    profesor: "Richar Leonardo Muñoz Muñoz"
+                }]
+            },
+            {
+                codigo: "2022244",
+                nombre: "Salon de diseño gráfico",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "10:00", fin: "12:00"}],
+                    profesor: "Nelson Orlando Beltrán Duque"
+                }]
+            },
+            {
+                codigo: "2029762",
+                nombre: "Ética Digital y Diseño",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
+                    profesor: "Mónica Forero"
+                }]
+            },
+            {
+                codigo: "2029459",
+                nombre: "Fotolibro",
+                grupos: [{
+                    numero: 1,
+                    horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}],
+                    profesor: "Clara Victoria Forero Murillo"
+                }]
+            }
+        ];
+
+        // Estado de la aplicación
+        let filteredMaterias = materias;
+        let currentFilter = 'all';
+      
+      // Categorizar materias por tipo
+function categorizarMaterias(materiasArray) {
+    const categorias = {
+        'Talleres': [],
+        'Historia': [],
+        'Fundamentos': [],
+        'Fotografía': [],
+        'Énfasis': [],
+        'Optativas': []
+    };
+    
+    materiasArray.forEach(materia => {
+        if (materia.nombre.toLowerCase().includes('taller')) {
+            categorias['Talleres'].push(materia);
+        } else if (materia.nombre.toLowerCase().includes('historia')) {
+            categorias['Historia'].push(materia);
+        } else if (materia.nombre.toLowerCase().includes('fundamentos')) {
+            categorias['Fundamentos'].push(materia);
+        } else if (materia.nombre.toLowerCase().includes('fotografía')) {
+            categorias['Fotografía'].push(materia);
+        } else if (materia.nombre.toLowerCase().includes('énfasis')) {
+            categorias['Énfasis'].push(materia);
+        } else {
+            categorias['Optativas'].push(materia);
+        }
+    });
+    
+    return categorias;
+}
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            renderMaterias(materias);
+            setupEventListeners();
+        });
+
+        // Configurar event listeners
+function setupEventListeners() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', handleSearch);
+
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFilter = e.target.dataset.filter;
+            handleSearch();
+        });
+    });
+    
+    // Event delegation para acordeones de secciones
+    document.getElementById('results').addEventListener('click', (e) => {
+        // Click en header de sección
+        if (e.target.closest('.section-header')) {
+            const header = e.target.closest('.section-header');
+            const content = header.nextElementSibling;
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+        
+        // Click en header de materia
+        if (e.target.closest('.materia-header')) {
+            const card = e.target.closest('.materia-card');
+            card.classList.toggle('expanded');
+        }
+    });
+}
+
+        // Actualizar estadísticas
+        function updateStats() {
+            const totalMaterias = materias.length;
+            const totalGrupos = materias.reduce((sum, m) => sum + m.grupos.length, 0);
+            document.getElementById('stats').innerHTML = `
+                📊 <strong>${totalMaterias}</strong> materias disponibles | 
+                👥 <strong>${totalGrupos}</strong> grupos totales
+            `;
+        }
+
+        // Buscar materias
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredMaterias = materias.filter(materia => {
+                // Filtro de búsqueda
+                const matchesSearch = 
+                    materia.codigo.toLowerCase().includes(searchTerm) ||
+                    materia.nombre.toLowerCase().includes(searchTerm) ||
+                    materia.grupos.some(g => g.profesor.toLowerCase().includes(searchTerm));
+
+                // Filtro de categoría
+                let matchesCategory = true;
+                if (currentFilter !== 'all') {
+                    matchesCategory = materia.nombre.toLowerCase().includes(currentFilter);
+                }
+
+                return matchesSearch && matchesCategory;
+            });
+
+            renderMaterias(filteredMaterias);
+        }
+
+        // Renderizar materias
+      function renderMaterias(materiasToRender) {
+    const resultsContainer = document.getElementById('results');
+    
+    if (materiasToRender.length === 0) {
+        resultsContainer.innerHTML = '<div class="no-results">😕 No se encontraron materias</div>';
+        return;
+    }
+
+    const categorias = categorizarMaterias(materiasToRender);
+    
+    resultsContainer.innerHTML = Object.entries(categorias)
+        .filter(([_, materias]) => materias.length > 0)
+        .map(([categoria, materias]) => `
+            <div class="section">
+                <div class="section-header active">
+                    <div class="section-title">
+                        ${categoria}
+                        <span class="section-count">${materias.length}</span>
+                    </div>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="section-content active">
+                    <div class="results">
+                        ${materias.map(materia => `
+                            <div class="materia-card">
+                                <div class="materia-header">
+                                    <div class="materia-info">
+                                        <div class="materia-nombre">${materia.nombre}</div>
+                                        <span class="materia-codigo">${materia.codigo}</span>
+                                    </div>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                                
+                                <div class="grupos-container">
+                                    ${materia.grupos.map(grupo => `
+                                        <div class="grupo">
+                                            <div class="grupo-header">Grupo ${grupo.numero}</div>
+                                            ${grupo.horarios.map(h => `
+                                                <div class="horario-item">
+                                                    <span class="dia">${h.dia}</span>
+                                                    <span class="hora">${h.inicio}${h.fin ? ' - ' + h.fin : ''}</span>
+                                                </div>
+                                            `).join('')}
+                                            <div class="profesor">👨‍🏫 ${grupo.profesor}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+}
+    </script>
+</body>
+</html>
