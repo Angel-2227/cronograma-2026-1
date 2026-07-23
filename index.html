@@ -1,402 +1,212 @@
-
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta Materias - Diseño Gráfico</title>
-    <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cronogramas UNAL</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
 body {
-    
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    min-height: 100vh;
-    padding: 20px;
-    color: #e2e8f0;
+    background: linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+    min-height:100vh; padding:20px; color:#e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
+.container { max-width:1400px; margin:0 auto; }
+h1 { color:#f1f5f9; text-align:center; margin-bottom:8px; font-size:2.2em; font-weight:700; letter-spacing:-0.5px; }
+h2.subtitle { color:#94a3b8; text-align:center; margin-bottom:30px; font-weight:400; font-size:1em; }
+.breadcrumb { text-align:center; color:#64748b; margin-bottom:24px; font-size:.95em; }
+.breadcrumb b { color:#93c5fd; }
 
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-h1 {
-    color: #f1f5f9;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.2em;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-/* Search Box */
-.search-box {
-    background: #1e293b;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
-    margin-bottom: 30px;
-    border: 1px solid #334155;
-}
-
-.search-input {
-    width: 100%;
-    padding: 14px 20px;
-    font-size: 1em;
-    background: #0f172a;
-    border: 2px solid #334155;
-    border-radius: 12px;
-    color: #f1f5f9;
-    transition: all 0.3s ease;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.search-input::placeholder {
-    color: #64748b;
-}
-
-/* Filters */
-.filters {
-    display: flex;
-    gap: 10px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-}
-
-.filter-btn {
-    padding: 10px 18px;
-    border: 2px solid #334155;
-    background: #0f172a;
-    color: #cbd5e1;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
-.filter-btn:hover {
-    border-color: #3b82f6;
-    color: #3b82f6;
-    transform: translateY(-2px);
-}
-
-.filter-btn.active {
-    background: #3b82f6;
-    color: white;
-    border-color: #3b82f6;
-}
-
+/* ---------- Botones generales ---------- */
 .boton-estilizado {
-    display: inline-block;
-    padding: 10px 18px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
+    display:inline-block; padding:10px 18px;
+    background: linear-gradient(135deg,#10b981 0%,#059669 100%);
+    color:white; text-decoration:none; border-radius:10px; font-weight:600;
+    cursor:pointer; transition: all .3s ease; border:none; font-size:.95em;
+}
+.boton-estilizado:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+.boton-secundario {
+    display:inline-block; padding:10px 18px; background:#334155; color:#f1f5f9;
+    border-radius:10px; font-weight:600; cursor:pointer; border:none; font-size:.95em;
+    transition: all .3s ease;
+}
+.boton-secundario:hover { background:#475569; }
+
+/* ---------- Pantallas tipo carpetas (carreras / semestres) ---------- */
+.top-actions { display:flex; justify-content:center; gap:12px; margin-bottom:32px; flex-wrap:wrap; }
+.carpetas-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:18px; margin-bottom:30px; }
+.carpeta-card {
+    background:#1e293b; border:1px solid #334155; border-radius:16px; padding:22px;
+    cursor:pointer; transition:all .25s ease; position:relative;
+}
+.carpeta-card:hover { border-color:#3b82f6; transform:translateY(-3px); box-shadow:0 8px 20px rgba(59,130,246,.2); }
+.carpeta-card .icono { font-size:2em; margin-bottom:10px; }
+.carpeta-card .nombre { font-size:1.3em; font-weight:700; color:#f1f5f9; margin-bottom:6px; }
+.carpeta-card .meta { color:#94a3b8; font-size:.85em; }
+.carpeta-card .borrar {
+    position:absolute; top:14px; right:14px; background:transparent; border:none;
+    color:#64748b; cursor:pointer; font-size:1.1em; opacity:.6; transition:opacity .2s;
+}
+.carpeta-card .borrar:hover { opacity:1; color:#f87171; }
+.estado-vacio, .estado-carga {
+    text-align:center; color:#94a3b8; padding:50px 20px; background:#1e293b;
+    border-radius:12px; border:2px dashed #334155; font-size:1.05em;
 }
 
-.boton-estilizado:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-}
+/* ---------- Modales ---------- */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); align-items:center; justify-content:center; z-index:1000; padding:20px; }
+.modal-overlay.active { display:flex; }
+.modal-box { background:#1e293b; border:1px solid #334155; border-radius:16px; padding:28px; max-width:460px; width:100%; }
+.modal-box h3 { color:#f1f5f9; margin-bottom:18px; font-size:1.3em; }
+.campo { margin-bottom:16px; }
+.campo label { display:block; color:#cbd5e1; font-size:.9em; margin-bottom:6px; font-weight:600; }
+.campo input[type="text"] { width:100%; padding:12px 14px; background:#0f172a; border:2px solid #334155; border-radius:10px; color:#f1f5f9; font-size:1em; }
+.campo input[type="text"]:focus { outline:none; border-color:#3b82f6; }
+.campo input[type="file"] { width:100%; padding:10px; background:#0f172a; border:2px dashed #334155; border-radius:10px; color:#cbd5e1; }
+.modal-actions { display:flex; gap:10px; margin-top:20px; }
+.modal-actions button { flex:1; padding:12px; }
+.msg-estado { margin-top:12px; font-size:.9em; padding:10px; border-radius:8px; display:none; }
+.msg-estado.error { display:block; background:rgba(239,68,68,.15); color:#fca5a5; }
+.msg-estado.ok { display:block; background:rgba(16,185,129,.15); color:#6ee7b7; }
+.msg-estado.cargando { display:block; background:rgba(59,130,246,.15); color:#93c5fd; }
 
-/* Stats */
-.stats {
-    background: rgba(59, 130, 246, 0.15);
-    color: #f1f5f9;
-    padding: 16px;
-    border-radius: 12px;
-    text-align: center;
-    margin-bottom: 24px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    font-size: 0.95em;
-}
+/* ---------- Search Box (pantalla visor) ---------- */
+.search-box { background:#1e293b; border-radius:16px; padding:24px; box-shadow:0 4px 6px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.2); margin-bottom:30px; border:1px solid #334155; }
+.search-input { width:100%; padding:14px 20px; font-size:1em; background:#0f172a; border:2px solid #334155; border-radius:12px; color:#f1f5f9; transition:all .3s ease; }
+.search-input:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.1); }
+.search-input::placeholder { color:#64748b; }
+.filters { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; align-items:center; }
+.filter-btn { padding:10px 18px; border:2px solid #334155; background:#0f172a; color:#cbd5e1; border-radius:10px; cursor:pointer; transition:all .3s ease; font-size:.9em; font-weight:500; }
+.filter-btn:hover { border-color:#3b82f6; color:#3b82f6; transform:translateY(-2px); }
+.filter-btn.active { background:#3b82f6; color:white; border-color:#3b82f6; }
 
-/* Section Headers */
-.section {
-    margin-bottom: 24px;
-}
+/* ---------- Stats ---------- */
+.stats { background:rgba(59,130,246,.15); color:#f1f5f9; padding:16px; border-radius:12px; text-align:center; margin-bottom:24px; backdrop-filter:blur(10px); border:1px solid rgba(59,130,246,.2); font-size:.95em; }
 
-.section-header {
-    background: #1e293b;
-    padding: 16px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #334155;
-    transition: all 0.3s ease;
-    user-select: none;
-}
+/* ---------- Secciones / materias (idéntico al original) ---------- */
+.section { margin-bottom:24px; }
+.section-header { background:#1e293b; padding:16px 20px; border-radius:12px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; border:1px solid #334155; transition:all .3s ease; user-select:none; }
+.section-header:hover { background:#293548; border-color:#3b82f6; }
+.section-title { font-size:1.2em; font-weight:600; color:#f1f5f9; display:flex; align-items:center; gap:10px; }
+.section-count { background:#334155; padding:4px 12px; border-radius:20px; font-size:.8em; color:#cbd5e1; }
+.section-arrow { font-size:1.3em; transition:transform .3s ease; color:#64748b; }
+.section-header.active .section-arrow { transform:rotate(180deg); }
+.section-content { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+.section-content.active { max-height:10000px; }
 
-.section-header:hover {
-    background: #293548;
-    border-color: #3b82f6;
-}
+.results { display:grid; grid-template-columns:repeat(auto-fill, minmax(500px,1fr)); gap:16px; padding:16px 0; }
+@media (max-width:1100px) { .results { grid-template-columns:1fr; } }
 
-.section-title {
-    font-size: 1.2em;
-    font-weight: 600;
-    color: #f1f5f9;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+.materia-card { background:#1e293b; border-radius:12px; border:1px solid #334155; overflow:hidden; transition:all .3s ease; animation:fadeIn .3s ease; }
+.materia-card:hover { border-color:#3b82f6; box-shadow:0 4px 12px rgba(59,130,246,.15); }
+.materia-header { padding:16px 20px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; background:#0f172a; transition:background .3s ease; user-select:none; }
+.materia-header:hover { background:#1a2332; }
+.materia-info { flex:1; }
+.materia-nombre { font-size:1.1em; font-weight:600; color:#f1f5f9; margin-bottom:6px; line-height:1.3; }
+.materia-codigo { background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%); color:white; padding:4px 12px; border-radius:6px; font-weight:600; font-size:.85em; display:inline-block; }
+.expand-icon { font-size:1.4em; transition:transform .3s ease; color:#64748b; margin-left:16px; }
+.materia-card.expanded .expand-icon { transform:rotate(180deg); color:#3b82f6; }
 
-.section-count {
-    background: #334155;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.8em;
-    color: #cbd5e1;
-}
+.grupos-container { max-height:0; overflow:hidden; transition:max-height .4s ease; padding:0 20px; }
+.materia-card.expanded .grupos-container { max-height:2000px; padding:0 20px 20px 20px; }
+.grupo { background:#0f172a; padding:14px 16px; border-radius:10px; margin-top:12px; border-left:3px solid #3b82f6; transition:all .3s ease; }
+.grupo:hover { background:#1a2332; border-left-color:#60a5fa; }
+.grupo-header { font-weight:600; color:#3b82f6; margin-bottom:10px; font-size:.95em; }
+.horario-item { display:flex; align-items:center; padding:6px 0; font-size:.9em; }
+.dia { font-weight:600; color:#cbd5e1; min-width:100px; }
+.hora { color:#94a3b8; }
+.profesor { margin-top:10px; padding-top:10px; border-top:1px solid #334155; color:#94a3b8; font-size:.9em; display:flex; align-items:center; gap:6px; }
 
-.section-arrow {
-    font-size: 1.3em;
-    transition: transform 0.3s ease;
-    color: #64748b;
-}
+.no-results { text-align:center; color:#cbd5e1; font-size:1.2em; margin-top:60px; padding:40px; background:#1e293b; border-radius:12px; border:2px dashed #334155; }
 
-.section-header.active .section-arrow {
-    transform: rotate(180deg);
-}
+.top-bar-visor { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:10px; }
 
-.section-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-}
-
-.section-content.active {
-    max-height: 10000px;
-}
-
-/* Results Grid */
-.results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-    gap: 16px;
-    padding: 16px 0;
-}
-
-@media (max-width: 1100px) {
-    .results {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Materia Card */
-.materia-card {
-    background: #1e293b;
-    border-radius: 12px;
-    border: 1px solid #334155;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.materia-card:hover {
-    border-color: #3b82f6;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-.materia-header {
-    padding: 16px 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #0f172a;
-    transition: background 0.3s ease;
-    user-select: none;
-}
-
-.materia-header:hover {
-    background: #1a2332;
-}
-
-.materia-info {
-    flex: 1;
-}
-
-.materia-nombre {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: #f1f5f9;
-    margin-bottom: 6px;
-    line-height: 1.3;
-}
-
-.materia-codigo {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.85em;
-    display: inline-block;
-}
-
-.expand-icon {
-    font-size: 1.4em;
-    transition: transform 0.3s ease;
-    color: #64748b;
-    margin-left: 16px;
-}
-
-.materia-card.expanded .expand-icon {
-    transform: rotate(180deg);
-    color: #3b82f6;
-}
-
-/* Grupos Container */
-.grupos-container {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease;
-    padding: 0 20px;
-}
-
-.materia-card.expanded .grupos-container {
-    max-height: 2000px;
-    padding: 0 20px 20px 20px;
-}
-
-.grupo {
-    background: #0f172a;
-    padding: 14px 16px;
-    border-radius: 10px;
-    margin-top: 12px;
-    border-left: 3px solid #3b82f6;
-    transition: all 0.3s ease;
-}
-
-.grupo:hover {
-    background: #1a2332;
-    border-left-color: #60a5fa;
-}
-
-.grupo-header {
-    font-weight: 600;
-    color: #3b82f6;
-    margin-bottom: 10px;
-    font-size: 0.95em;
-}
-
-.horario-item {
-    display: flex;
-    align-items: center;
-    padding: 6px 0;
-    font-size: 0.9em;
-}
-
-.dia {
-    font-weight: 600;
-    color: #cbd5e1;
-    min-width: 100px;
-}
-
-.hora {
-    color: #94a3b8;
-}
-
-.profesor {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #334155;
-    color: #94a3b8;
-    font-size: 0.9em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-/* No Results */
-.no-results {
-    text-align: center;
-    color: #cbd5e1;
-    font-size: 1.2em;
-    margin-top: 60px;
-    padding: 40px;
-    background: #1e293b;
-    border-radius: 12px;
-    border: 2px dashed #334155;
-}
-
-/* Scrollbar personalizado */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #0f172a;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #475569;
-}
-
-/* Animaciones */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.materia-card {
-    animation: fadeIn 0.3s ease;
-}
-
-    </style>
+::-webkit-scrollbar { width:10px; }
+::-webkit-scrollbar-track { background:#0f172a; }
+::-webkit-scrollbar-thumb { background:#334155; border-radius:5px; }
+::-webkit-scrollbar-thumb:hover { background:#475569; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>📚 Consulta de Materias - Diseño Gráfico UNAL</h1>
+<div class="container">
 
-        <div class="stats" id="stats">
-            Cargando datos...
+    <!-- ======================= PANTALLA 1: CARRERAS ======================= -->
+    <div id="pantallaCarreras">
+        <h1>🎓 Mis Cronogramas</h1>
+        <h2 class="subtitle">Elige una carrera</h2>
+        <div class="top-actions">
+            <button class="boton-estilizado" id="btnNuevaCarrera">➕ Nueva carrera</button>
         </div>
+        <div id="listaCarreras" class="estado-carga">Cargando carreras...</div>
+    </div>
 
-        
+    <!-- ======================= PANTALLA 2: SEMESTRES DE UNA CARRERA ======================= -->
+    <div id="pantallaSemestres" style="display:none;">
+        <div class="top-bar-visor">
+            <button class="boton-secundario" id="btnVolverCarreras">⬅ Carreras</button>
+            <span></span>
+        </div>
+        <h1 id="tituloCarreraActual">📁 Carrera</h1>
+        <h2 class="subtitle">Elige un semestre o sube uno nuevo</h2>
+        <div class="top-actions">
+            <button class="boton-estilizado" id="btnNuevoSemestre">➕ Subir nuevo semestre</button>
+            <a href="https://unspa.pages.dev/" class="boton-secundario" style="text-decoration:none;">Ir a SPA</a>
+        </div>
+        <div id="listaSemestres" class="estado-carga">Cargando semestres...</div>
+    </div>
+
+    <!-- ======================= MODAL: NUEVA CARRERA ======================= -->
+    <div class="modal-overlay" id="modalCarreraOverlay">
+        <div class="modal-box">
+            <h3>Nueva carrera</h3>
+            <div class="campo">
+                <label>Nombre de la carrera</label>
+                <input type="text" id="inputNombreCarrera" placeholder="Ej: Diseño Gráfico">
+            </div>
+            <div class="modal-actions">
+                <button class="boton-secundario" id="btnCancelarCarrera">Cancelar</button>
+                <button class="boton-estilizado" id="btnGuardarCarrera">Crear</button>
+            </div>
+            <div class="msg-estado" id="msgEstadoCarrera"></div>
+        </div>
+    </div>
+
+    <!-- ======================= MODAL: SUBIR NUEVO SEMESTRE ======================= -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <h3>Nuevo semestre</h3>
+            <div class="campo">
+                <label>Nombre del semestre (ej: 2026-2)</label>
+                <input type="text" id="inputNombreSemestre" placeholder="2026-2">
+            </div>
+            <div class="campo">
+                <label>Archivo de programación (.csv o .xlsx)</label>
+                <input type="file" id="inputArchivo" accept=".csv,.xlsx,.xls">
+            </div>
+            <div class="modal-actions">
+                <button class="boton-secundario" id="btnCancelarModal">Cancelar</button>
+                <button class="boton-estilizado" id="btnGuardarSemestre">Guardar</button>
+            </div>
+            <div class="msg-estado" id="msgEstadoModal"></div>
+        </div>
+    </div>
+
+    <!-- ======================= PANTALLA 3: VISOR (la app original, intacta) ======================= -->
+    <div id="pantallaVisor" style="display:none;">
+        <div class="top-bar-visor">
+            <button class="boton-secundario" id="btnVolverSemestres">⬅ Semestres</button>
+            <span></span>
+        </div>
+        <div class="breadcrumb" id="breadcrumbVisor"></div>
+        <h1 id="tituloSemestreActual">📚 Semestre</h1>
+
+        <div class="stats" id="stats">Cargando datos...</div>
 
         <div class="search-box">
-            <input 
-                type="text" 
-                class="search-input" 
-                id="searchInput" 
-                placeholder="Busca por código (ej: 2016080) o nombre de materia (ej: fotografía)..."
-            >
-            
+            <input type="text" class="search-input" id="searchInput"
+                placeholder="Busca por código (ej: 2016080) o nombre de materia (ej: fotografía)...">
             <div class="filters">
-                <a href="https://unspa.pages.dev/" class="boton-estilizado">Ir a SPA</a>
                 <button class="filter-btn active" data-filter="all">Todas</button>
                 <button class="filter-btn" data-filter="taller">Talleres</button>
                 <button class="filter-btn" data-filter="historia">Historia</button>
@@ -406,854 +216,509 @@ h1 {
 
         <div class="results" id="results"></div>
     </div>
-<button onclick="downloadJSON()" style="position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999;">
+
+</div>
+
+<button onclick="downloadJSON()" style="position:fixed; bottom:20px; right:20px; padding:12px 20px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.2); z-index:9999;">
     💾 Exportar para SPA
 </button>
-  <script>
-function downloadJSON() {
-    const blob = new Blob([JSON.stringify(materias, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'horarios-' + new Date().toISOString().split('T')[0] + '.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    alert('✅ Archivo JSON descargado. Ahora súbelo en el SPA.');
-}
-</script>
-    <script>
-        // Datos de las materias extraídos del PDF
-        const materias = [
-            {
-                codigo: "2016080",
-                nombre: "Aplicaciones gráficas tridimensionales",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
-                    profesor: "John Freddy Umaña"
-                }]
-            },
-            {
-                codigo: "2022166",
-                nombre: "Arte rupestre muisca",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "17:00", fin: "19:00"}, {dia: "JUEVES", inicio: "17:00", fin: "19:00"}],
-                    profesor: "Federman Contreras"
-                }]
-            },
-            {
-                codigo: "2016061",
-                nombre: "Bocetación e ilustración",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Federman Contreras"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Juan De La Cruz Sanchez Ramirez"
-                    }
-                ]
-            },
-            {
-                codigo: "2022182",
-                nombre: "Diseño gráfico y concepto publicitario",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
-                    profesor: "Jose Jairo Vargas Castillo"
-                }]
-            },
-            {
-                codigo: "2016063",
-                nombre: "Esquemática básica",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "Luis Enrique Pedriza"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "JUEVES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "Luis Enrique Pedriza"
-                    }
-                ]
-            },
-            {
-                codigo: "2016064",
-                nombre: "Estética y teoría de la imagen",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "11:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "11:00", fin: "13:00"}],
-                        profesor: "Federman Contreras (Diseño Gráfico)"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "18:00"}],
-                        profesor: "Juan Diego Antonio Pablo Caicedo Gonzalez (Cine y TV)"
-                    },
-                    {
-                        numero: 3,
-                        horarios: [{dia: "JUEVES", inicio: "14:00", fin: "18:00"}],
-                        profesor: "Ana María Lozano (Artes Plásticas)"
-                    }
-                ]
-            },
-            {
-                codigo: "2016065",
-                nombre: "Expresión visual",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "18:00"}],
-                        profesor: "Jose Jairo Vargas Castillo"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "18:00"}],
-                        profesor: "Richar Muñoz Muñoz"
-                    }
-                ]
-            },
-            {
-                codigo: "2016066",
-                nombre: "Figura humana y representación",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "16:00", fin: "19:00"}, {dia: "MIÉRCOLES", inicio: "16:00", fin: "19:00"}],
-                        profesor: "Andrés Díaz Muñoz"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Andrés Díaz Muñoz"
-                    }
-                ]
-            },
-            {
-                codigo: "2016068",
-                nombre: "Fotografía I",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "JUEVES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "Nubia Angelica Caballero Pedraza (Cine y TV)"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Omaira Abadia Rey (Artes Plásticas)"
-                    },
-                    {
-                        numero: 3,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Nubia Angelica Caballero Pedraza (Cine y TV)"
-                    },
-                    {
-                        numero: 4,
-                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Juan Ricardo Rodriguez Ramirez (Diseño Gráfico)"
-                    },
-                    {
-                        numero: 5,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Juan Ricardo Rodriguez Ramirez (Diseño Gráfico)"
-                    },
-                    {
-                        numero: 6,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Grupo Artes Plásticas"
-                    },
-                    {
-                        numero: 7,
-                        horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Grupo Artes Plásticas"
-                    }
-                ]
-            },
-            {
-                codigo: "2005208",
-                nombre: "Fotografía II",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Ana Adarve (Artes Plásticas y Diseño Gráfico)"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Ana Adarve (Artes Plásticas y Diseño Gráfico)"
-                    },
-                    {
-                        numero: 3,
-                        horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Guillermo Arturo Santos Saenz (Diseño Gráfico)"
-                    },
-                    {
-                        numero: 4,
-                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "Pilar Suescún Monroy (Diseño Gráfico)"
-                    }
-                ]
-            },
-            {
-                codigo: "2016062",
-                nombre: "Fotografía III",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Clara Victoria Forero Murillo"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Guillermo Arturo Santos Saenz"
-                    }
-                ]
-            },
-            {
-                codigo: "2016069",
-                nombre: "Fundamentos tecnológicos: Color y producción",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MIÉRCOLES", inicio: "9:00", fin: "11:00"}, {dia: "VIERNES", inicio: "9:00", fin: "11:00"}],
-                        profesor: "Antonio Marquez Bulla"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MARTES", inicio: "11:00", fin: "13:00"}, {dia: "VIERNES", inicio: "11:00", fin: "13:00"}],
-                        profesor: "Antonio Marquez Bulla"
-                    }
-                ]
-            },
-            {
-                codigo: "2016070",
-                nombre: "Fundamentos tecnológicos: Formatos y medidas",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "Antonio Marquez Bulla"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "JUEVES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "Antonio Marquez Bulla"
-                    }
-                ]
-            },
-            {
-                codigo: "2016071",
-                nombre: "Fundamentos tecnológicos: Tipometría",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MIÉRCOLES", inicio: "8:00", fin: "10:00"}, {dia: "VIERNES", inicio: "8:00", fin: "10:00"}],
-                        profesor: "Felipe Hernando Tadeo Padilla Bruges"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MIÉRCOLES", inicio: "7:00", fin: "9:00"}, {dia: "VIERNES", inicio: "7:00", fin: "9:00"}],
-                        profesor: "Antonio Marquez Bulla"
-                    }
-                ]
-            },
-            {
-                codigo: "2016074",
-                nombre: "Historia del diseño gráfico: Contextos del diseño en Colombia",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "9:00", fin: "11:00"}, {dia: "JUEVES", inicio: "9:00", fin: "11:00"}],
-                    profesor: "Carlos Arturo Acosta De Greiff"
-                }]
-            },
-            {
-                codigo: "2016075",
-                nombre: "Historia del diseño gráfico: De la imagen a la palabra",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "11:00", fin: "13:00"}, {dia: "JUEVES", inicio: "11:00", fin: "13:00"}],
-                    profesor: "Miladys Milagros Alvarez Lopez"
-                }]
-            },
-            {
-                codigo: "2016076",
-                nombre: "Historia del diseño gráfico: De las artes al diseño",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "LUNES", inicio: "14:00", fin: "16:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "16:00"}],
-                    profesor: "Carlos Arturo Acosta De Greiff"
-                }]
-            },
-            {
-                codigo: "2016077",
-                nombre: "Historia del diseño gráfico: De los ismos a los medios",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "7:00", fin: "9:00"}, {dia: "JUEVES", inicio: "7:00", fin: "9:00"}],
-                        profesor: "Carlos Arturo Acosta De Greiff"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MIÉRCOLES", inicio: "9:00", fin: "11:00"}, {dia: "VIERNES", inicio: "9:00", fin: "11:00"}],
-                        profesor: "Miladys Milagros Alvarez Lopez"
-                    }
-                ]
-            },
-            {
-                codigo: "2016078",
-                nombre: "Historia del diseño gráfico: Sociedad, cultura y diseño en Latinoamérica",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "9:00", fin: "11:00"}, {dia: "JUEVES", inicio: "9:00", fin: "11:00"}],
-                    profesor: "Miladys Milagros Alvarez Lopez"
-                }]
-            },
-            {
-                codigo: "2016079",
-                nombre: "Imagen dinámica",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Wilson Andrés Borja Morroquín"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Andrea Sánchez Guerrero"
-                    }
-                ]
-            },
-            {
-                codigo: "2022229",
-                nombre: "Narración gráfica",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
-                    profesor: "Bernardo Rincon Martinez"
-                }]
-            },
-            {
-                codigo: "2016081",
-                nombre: "Palabra e imagen",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "9:00", fin: "13:00"}],
-                        profesor: "Andrés Felipe Parra Vela"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "JUEVES", inicio: "9:00", fin: "13:00"}],
-                        profesor: "María Manuela Buitrago Villamizar"
-                    }
-                ]
-            },
-            {
-                codigo: "2016083",
-                nombre: "Producción en medios digitales",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "9:00", fin: "11:00"}, {dia: "JUEVES", inicio: "9:00", fin: "11:00"}],
-                        profesor: "Richar Leonardo Munoz Muñoz"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MARTES", inicio: "11:00", fin: "13:00"}, {dia: "JUEVES", inicio: "11:00", fin: "13:00"}],
-                        profesor: "Richar Leonardo Munoz Muñoz"
-                    }
-                ]
-            },
-            {
-                codigo: "2016084",
-                nombre: "Producción en medios impresos",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "MARTES", inicio: "7:00", fin: "9:00"}, {dia: "JUEVES", inicio: "7:00", fin: "9:00"}],
-                        profesor: "Felipe Hernando Tadeo Padilla Bruges"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "MARTES", inicio: "9:00", fin: "11:00"}, {dia: "JUEVES", inicio: "9:00", fin: "11:00"}],
-                        profesor: "Felipe Hernando Tadeo Padilla Bruges"
-                    }
-                ]
-            },
-            {
-                codigo: "2016086",
-                nombre: "Seminario de investigación y proyecto",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "JUEVES", inicio: "10:00", fin: "12:00"}],
-                    profesor: "Heliumen Alberto Triana Parrado"
-                }]
-            },
-            {
-                codigo: "2016087",
-                nombre: "Taller de énfasis en ilustración",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
-                    profesor: "Bernardo Rincon Martinez"
-                }]
-            },
-            {
-                codigo: "2016088",
-                nombre: "Taller de énfasis en ilustración II",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "10:00", fin: "13:00"}],
-                    profesor: "Carlos Martin Riaño Moncada"
-                }]
-            },
-            {
-                codigo: "2016093",
-                nombre: "Taller de énfasis en animación y narrativas audiovisuales",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "9:00", fin: "12:00"}, {dia: "JUEVES", inicio: "9:00", fin: "12:00"}],
-                    profesor: "Wilson Andrés Borja Morroquín"
-                }]
-            },
-            {
-                codigo: "2016094",
-                nombre: "Taller de énfasis en animación y narrativas audiovisuales II",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}],
-                    profesor: "Andrea Sánchez Guerrero"
-                }]
-            },
-            {
-                codigo: "2016091",
-                nombre: "Taller de énfasis en multimedia e imagen digital",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}],
-                    profesor: "Mónica Forero"
-                }]
-            },
-            {
-                codigo: "2016092",
-                nombre: "Taller de énfasis en multimedia e imagen digital II",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
-                    profesor: "Mónica Forero"
-                }]
-            },
-            {
-                codigo: "2016090",
-                nombre: "Taller de énfasis en imagen fotográfica II",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}],
-                    profesor: "Pilar Suescún Monroy"
-                }]
-            },
-            {
-                codigo: "2016097",
-                nombre: "Taller de énfasis en tipografía y diagramación",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
-                    profesor: "César Arturo Puertas Céspedes"
-                }]
-            },
-            {
-                codigo: "2016098",
-                nombre: "Taller de énfasis en tipografía y diagramación II",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}],
-                    profesor: "César Arturo Puertas Céspedes"
-                }]
-            },
-            {
-                codigo: "2025646",
-                nombre: "Caligrafía para todos",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "LUNES", inicio: "14:00", fin: "18:00"}],
-                    profesor: "Cesar Arturo Puertas Céspedes"
-                }]
-            },
-            {
-                codigo: "2016099",
-                nombre: "Taller forma y estructura",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}, {dia: "VIERNES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "Jose Jairo Vargas Castillo"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Marco Aurelio Cardenas Cardozo"
-                    }
-                ]
-            },
-            {
-                codigo: "2016100",
-                nombre: "Taller identidad e imagen coordinada",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}, {dia: "VIERNES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "Marco Aurelio Cardenas Cardozo"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Jose Jairo Vargas Castillo"
-                    },
-                    {
-                        numero: 3,
-                        horarios: [{dia: "LUNES", inicio: "7:00", fin: "10:00"}, {dia: "MIÉRCOLES", inicio: "7:00", fin: "10:00"}, {dia: "VIERNES", inicio: "7:00", fin: "10:00"}],
-                        profesor: "María Manuela Buitrago Villamizar"
-                    }
-                ]
-            },
-            {
-                codigo: "2016101",
-                nombre: "Taller orientación y diseño de información",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Andrés Felipe Parra Vela"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Jorge Andrés Rodríguez Malagón"
-                    }
-                ]
-            },
-            {
-                codigo: "2016102",
-                nombre: "Taller signo y letra",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Nelson Orlando Beltrán Duque"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "10:00", fin: "13:00"}, {dia: "MIÉRCOLES", inicio: "10:00", fin: "13:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Juan De La Cruz Sanchez Ramirez"
-                    }
-                ]
-            },
-            {
-                codigo: "2016103",
-                nombre: "Taller tipografía: composición y diagramación",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}, {dia: "VIERNES", inicio: "14:00", fin: "17:00"}],
-                        profesor: "Nelson Orlando Beltrán Duque"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "LUNES", inicio: "14:00", fin: "17:00"}, {dia: "MIÉRCOLES", inicio: "14:00", fin: "17:00"}, {dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                        profesor: "Marco Aurelio Cardenas Cardozo"
-                    }
-                ]
-            },
-            {
-                codigo: "2016104",
-                nombre: "Teoría de la mirada",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "JUEVES", inicio: "14:00", fin: "18:00"}],
-                    profesor: "Gabriela Alejandra González"
-                }]
-            },
-            {
-                codigo: "2016105",
-                nombre: "Teorías de la comunicación visual",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "11:00", fin: "13:00"}, {dia: "JUEVES", inicio: "11:00", fin: "13:00"}],
-                    profesor: "Federman Contreras"
-                }]
-            },
-            {
-                codigo: "2016106",
-                nombre: "Teorías de la comunicación visual II",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "VIERNES", inicio: "14:00", fin: "18:00"}],
-                    profesor: "Gabriela Alejandra González"
-                }]
-            },
-            {
-                codigo: "2015305",
-                nombre: "Trabajo de Grado - Asignaturas de Posgrado",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "VIERNES", inicio: "18:00", fin: "20:00"}],
-                    profesor: "Carlos Martin Riaño Moncada"
-                }]
-            },
-            {
-                codigo: "2015304",
-                nombre: "Trabajo de Grado",
-                grupos: [
-                    {
-                        numero: 1,
-                        horarios: [{dia: "JUEVES", inicio: "8:00", fin: "10:00"}],
-                        profesor: "Carlos Martin Riaño Moncada (Pasantía)"
-                    },
-                    {
-                        numero: 2,
-                        horarios: [{dia: "VIERNES", inicio: "18:00", fin: "20:00"}],
-                        profesor: "Carlos Martin Riaño Moncada"
-                    },
-                    {
-                        numero: 3,
-                        horarios: [{dia: "VIERNES", inicio: "19:00", fin: "20:00"}],
-                        profesor: "César Arturo Puertas Céspedes"
-                    },
-                    {
-                        numero: 4,
-                        horarios: [{dia: "VIERNES", inicio: "20:00", fin: ":2100"}],
-                        profesor: "Guillermo Arturo Santos Saenz"
-                    },
-                    {
-                        numero: 5,
-                        horarios: [{dia: "VIERNES", inicio: "19:00", fin: "20:00"}],
-                        profesor: "Bernardo Rincon Martinez"
-                    },
-                    {
-                        numero: 6,
-                        horarios: [{dia: "VIERNES", inicio: "18:00", fin: "20:00"}],
-                        profesor: "Antonio Marquez Bulla"
-                    }
-                ]
-            },
-            {
-                codigo: "2022180",
-                nombre: "Diseño, arte e ideología",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "VIERNES", inicio: "14:00", fin: "17:00"}],
-                    profesor: "Juan De La Cruz Sanchez Ramirez"
-                }]
-            },
-            {
-                codigo: "2022181",
-                nombre: "Diseño de portafolio",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "10:00", fin: "13:00"}, {dia: "JUEVES", inicio: "14:00", fin: "17:00"}],
-                    profesor: "Marco Aurelio Cardenas Cardozo"
-                }]
-            },
-            {
-                codigo: "2027093",
-                nombre: "Diseño Editorial/Libros",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "14:00", fin: "16:00"}],
-                    profesor: "Nelson Orlando Beltrán Duque"
-                }]
-            },
-            {
-                codigo: "2029484",
-                nombre: "Gestión Estratégica del Diseño",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "VIERNES", inicio: "7:00", fin: "10:00"}],
-                    profesor: "Richar Leonardo Muñoz Muñoz"
-                }]
-            },
-            {
-                codigo: "2026629",
-                nombre: "Fundamentación en código para web",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "JUEVES", inicio: "7:00", fin: "9:00"}],
-                    profesor: "Richar Leonardo Muñoz Muñoz"
-                }]
-            },
-            {
-                codigo: "2022244",
-                nombre: "Salon de diseño gráfico",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "10:00", fin: "12:00"}],
-                    profesor: "Nelson Orlando Beltrán Duque"
-                }]
-            },
-            {
-                codigo: "2029762",
-                nombre: "Ética Digital y Diseño",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "VIERNES", inicio: "10:00", fin: "13:00"}],
-                    profesor: "Mónica Forero"
-                }]
-            },
-            {
-                codigo: "2029459",
-                nombre: "Fotolibro",
-                grupos: [{
-                    numero: 1,
-                    horarios: [{dia: "MARTES", inicio: "14:00", fin: "17:00"}],
-                    profesor: "Clara Victoria Forero Murillo"
-                }]
-            }
-        ];
 
-        // Estado de la aplicación
-        let filteredMaterias = materias;
-        let currentFilter = 'all';
-      
-      // Categorizar materias por tipo
-function categorizarMaterias(materiasArray) {
-    const categorias = {
-        'Talleres': [],
-        'Historia': [],
-        'Fundamentos': [],
-        'Fotografía': [],
-        'Énfasis': [],
-        'Optativas': []
-    };
-    
-    materiasArray.forEach(materia => {
-        if (materia.nombre.toLowerCase().includes('taller')) {
-            categorias['Talleres'].push(materia);
-        } else if (materia.nombre.toLowerCase().includes('historia')) {
-            categorias['Historia'].push(materia);
-        } else if (materia.nombre.toLowerCase().includes('fundamentos')) {
-            categorias['Fundamentos'].push(materia);
-        } else if (materia.nombre.toLowerCase().includes('fotografía')) {
-            categorias['Fotografía'].push(materia);
-        } else if (materia.nombre.toLowerCase().includes('énfasis')) {
-            categorias['Énfasis'].push(materia);
-        } else {
-            categorias['Optativas'].push(materia);
+<!-- SheetJS: lee .csv y .xlsx en el navegador -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script type="module">
+// ============================================================================
+// 1) CONFIGURACIÓN DE FIREBASE
+//    Reemplaza este objeto con el que te da la consola de Firebase
+//    (Configuración del proyecto > Tus apps > SDK setup and configuration)
+// ============================================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+    getFirestore, collection, doc, setDoc, getDoc, getDocs,
+    deleteDoc, serverTimestamp, query, orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+    getAuth, signInAnonymously, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBuVPiP78-gAV3wSeRyUBdEEpcDTCo1jb0",
+  authDomain: "cronogramas-general-unal.firebaseapp.com",
+  projectId: "cronogramas-general-unal",
+  storageBucket: "cronogramas-general-unal.firebasestorage.app",
+  messagingSenderId: "267975306650",
+  appId: "1:267975306650:web:a71e05a7f051ecdb331e23"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+let yaAutenticado = false;
+
+onAuthStateChanged(auth, (user) => {
+    if (user && !yaAutenticado) {
+        // Solo cuando el login anónimo ya se confirmó consultamos Firestore.
+        // Si consultamos antes, las reglas (request.auth != null) rechazan
+        // la lectura y la app muestra un error de conexión aunque
+        // firebaseConfig esté bien.
+        yaAutenticado = true;
+        cargarCarreras();
+    }
+});
+
+signInAnonymously(auth).catch(err => {
+    console.error("Error de autenticación:", err);
+    listaCarrerasEl.className = 'estado-vacio';
+    listaCarrerasEl.textContent = `⚠️ No se pudo autenticar con Firebase (${err.code || err.message}). Revisa que "Anónimo" esté habilitado en Authentication > Sign-in method, y que el dominio desde el que abres la app esté en la lista de dominios autorizados.`;
+});
+
+// ============================================================================
+// 2) ESTADO GLOBAL
+//    Cada nivel (carrera / semestre) vive en su propio documento de Firestore.
+//    Abrir uno SOLO reemplaza la variable `materias` con los datos de ESE
+//    documento — nunca se juntan datos de dos cronogramas distintos.
+// ============================================================================
+let materias = [];
+let filteredMaterias = [];
+let currentFilter = 'all';
+let carreraActualId = null;
+let carreraActualNombre = null;
+let semestreActualId = null;
+
+function slugify(text) {
+    return text.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-+|-+$)/g, '') || 'x';
+}
+
+// ============================================================================
+// 3) PANTALLA 1 — CARRERAS
+// ============================================================================
+const pantallaCarreras = document.getElementById('pantallaCarreras');
+const pantallaSemestres = document.getElementById('pantallaSemestres');
+const pantallaVisor = document.getElementById('pantallaVisor');
+const listaCarrerasEl = document.getElementById('listaCarreras');
+const listaSemestresEl = document.getElementById('listaSemestres');
+
+async function cargarCarreras() {
+    listaCarrerasEl.className = 'estado-carga';
+    listaCarrerasEl.textContent = 'Cargando carreras...';
+    try {
+        const q = query(collection(db, 'carreras'), orderBy('creadoEn', 'desc'));
+        const snap = await getDocs(q);
+        if (snap.empty) {
+            listaCarrerasEl.className = 'estado-vacio';
+            listaCarrerasEl.textContent = '😕 Aún no has creado ninguna carrera. Usa "Nueva carrera" para empezar.';
+            return;
         }
+        listaCarrerasEl.className = 'carpetas-grid';
+        listaCarrerasEl.innerHTML = '';
+        snap.forEach(docSnap => {
+            const data = docSnap.data();
+            const card = document.createElement('div');
+            card.className = 'carpeta-card';
+            card.innerHTML = `
+                <button class="borrar" title="Eliminar carrera" data-id="${docSnap.id}">✕</button>
+                <div class="icono">🎓</div>
+                <div class="nombre">${data.nombre || docSnap.id}</div>
+                <div class="meta">Click para ver los semestres</div>
+            `;
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.borrar')) return;
+                abrirCarrera(docSnap.id, data.nombre || docSnap.id);
+            });
+            card.querySelector('.borrar').addEventListener('click', (e) => {
+                e.stopPropagation();
+                borrarCarrera(docSnap.id, data.nombre || docSnap.id);
+            });
+            listaCarrerasEl.appendChild(card);
+        });
+    } catch (err) {
+        console.error(err);
+        listaCarrerasEl.className = 'estado-vacio';
+        listaCarrerasEl.textContent = `⚠️ No se pudo conectar a Firebase (${err.code || err.message}). Revisa firebaseConfig, que Firestore esté creado y que las reglas estén publicadas.`;
+    }
+}
+
+async function borrarCarrera(id, nombre) {
+    if (!confirm(`¿Eliminar "${nombre}" y TODOS sus semestres guardados? Esta acción no se puede deshacer.`)) return;
+    try {
+        const semSnap = await getDocs(collection(db, 'carreras', id, 'semestres'));
+        for (const s of semSnap.docs) await deleteDoc(s.ref);
+        await deleteDoc(doc(db, 'carreras', id));
+        cargarCarreras();
+    } catch (err) {
+        console.error(err);
+        alert('No se pudo eliminar la carrera.');
+    }
+}
+
+function abrirCarrera(id, nombre) {
+    carreraActualId = id;
+    carreraActualNombre = nombre;
+    document.getElementById('tituloCarreraActual').textContent = `📁 ${nombre}`;
+    pantallaCarreras.style.display = 'none';
+    pantallaSemestres.style.display = 'block';
+    cargarSemestres();
+}
+
+document.getElementById('btnVolverCarreras').addEventListener('click', () => {
+    pantallaSemestres.style.display = 'none';
+    pantallaCarreras.style.display = 'block';
+    cargarCarreras();
+});
+
+// ---- Modal nueva carrera ----
+const modalCarreraOverlay = document.getElementById('modalCarreraOverlay');
+document.getElementById('btnNuevaCarrera').addEventListener('click', () => {
+    document.getElementById('inputNombreCarrera').value = '';
+    document.getElementById('msgEstadoCarrera').className = 'msg-estado';
+    modalCarreraOverlay.classList.add('active');
+});
+document.getElementById('btnCancelarCarrera').addEventListener('click', () => modalCarreraOverlay.classList.remove('active'));
+document.getElementById('btnGuardarCarrera').addEventListener('click', async () => {
+    const nombre = document.getElementById('inputNombreCarrera').value.trim();
+    const msg = document.getElementById('msgEstadoCarrera');
+    if (!nombre) { msg.className = 'msg-estado error'; msg.textContent = 'Escribe un nombre.'; return; }
+    const id = slugify(nombre);
+    try {
+        await setDoc(doc(db, 'carreras', id), { nombre, creadoEn: serverTimestamp() }, { merge: true });
+        modalCarreraOverlay.classList.remove('active');
+        cargarCarreras();
+    } catch (err) {
+        console.error(err);
+        msg.className = 'msg-estado error'; msg.textContent = 'Error al guardar: ' + err.message;
+    }
+});
+
+// ============================================================================
+// 4) PANTALLA 2 — SEMESTRES DE LA CARRERA ACTUAL
+// ============================================================================
+async function cargarSemestres() {
+    listaSemestresEl.className = 'estado-carga';
+    listaSemestresEl.textContent = 'Cargando semestres...';
+    try {
+        const q = query(collection(db, 'carreras', carreraActualId, 'semestres'), orderBy('creadoEn', 'desc'));
+        const snap = await getDocs(q);
+        if (snap.empty) {
+            listaSemestresEl.className = 'estado-vacio';
+            listaSemestresEl.textContent = '😕 Esta carrera aún no tiene semestres. Usa "Subir nuevo semestre".';
+            return;
+        }
+        listaSemestresEl.className = 'carpetas-grid';
+        listaSemestresEl.innerHTML = '';
+        snap.forEach(docSnap => {
+            const data = docSnap.data();
+            const card = document.createElement('div');
+            card.className = 'carpeta-card';
+            card.innerHTML = `
+                <button class="borrar" title="Eliminar semestre" data-id="${docSnap.id}">✕</button>
+                <div class="icono">📁</div>
+                <div class="nombre">${data.nombre || docSnap.id}</div>
+                <div class="meta">${data.totalMaterias ?? '-'} materias · ${data.totalGrupos ?? '-'} grupos</div>
+            `;
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.borrar')) return;
+                abrirSemestre(docSnap.id);
+            });
+            card.querySelector('.borrar').addEventListener('click', (e) => {
+                e.stopPropagation();
+                borrarSemestre(docSnap.id, data.nombre || docSnap.id);
+            });
+            listaSemestresEl.appendChild(card);
+        });
+    } catch (err) {
+        console.error(err);
+        listaSemestresEl.className = 'estado-vacio';
+        listaSemestresEl.textContent = `⚠️ No se pudo cargar (${err.code || err.message}). Revisa firebaseConfig y las reglas.`;
+    }
+}
+
+async function borrarSemestre(id, nombre) {
+    if (!confirm(`¿Eliminar el semestre "${nombre}"? Esta acción no se puede deshacer.`)) return;
+    try {
+        await deleteDoc(doc(db, 'carreras', carreraActualId, 'semestres', id));
+        cargarSemestres();
+    } catch (err) {
+        console.error(err);
+        alert('No se pudo eliminar el semestre.');
+    }
+}
+
+async function abrirSemestre(id) {
+    try {
+        const snap = await getDoc(doc(db, 'carreras', carreraActualId, 'semestres', id));
+        if (!snap.exists()) { alert('Ese semestre ya no existe.'); cargarSemestres(); return; }
+        const data = snap.data();
+        // Reemplazo TOTAL del arreglo materias: nunca se combina con datos anteriores
+        materias = data.materias || [];
+        semestreActualId = id;
+        document.getElementById('breadcrumbVisor').innerHTML = `<b>${carreraActualNombre}</b> / ${data.nombre || id}`;
+        document.getElementById('tituloSemestreActual').textContent = `📚 ${data.nombre || id}`;
+        pantallaSemestres.style.display = 'none';
+        pantallaVisor.style.display = 'block';
+        currentFilter = 'all';
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+        document.getElementById('searchInput').value = '';
+        updateStats();
+        renderMaterias(materias);
+    } catch (err) {
+        console.error(err);
+        alert('No se pudo abrir el semestre.');
+    }
+}
+
+document.getElementById('btnVolverSemestres').addEventListener('click', () => {
+    pantallaVisor.style.display = 'none';
+    pantallaSemestres.style.display = 'block';
+    materias = []; // limpia el estado del visor al salir
+    cargarSemestres();
+});
+
+// ---- Modal nuevo semestre ----
+const modalOverlay = document.getElementById('modalOverlay');
+const msgEstadoModal = document.getElementById('msgEstadoModal');
+
+document.getElementById('btnNuevoSemestre').addEventListener('click', () => {
+    document.getElementById('inputNombreSemestre').value = '';
+    document.getElementById('inputArchivo').value = '';
+    msgEstadoModal.className = 'msg-estado';
+    msgEstadoModal.textContent = '';
+    modalOverlay.classList.add('active');
+});
+document.getElementById('btnCancelarModal').addEventListener('click', () => modalOverlay.classList.remove('active'));
+
+document.getElementById('btnGuardarSemestre').addEventListener('click', async () => {
+    const nombreSemestre = document.getElementById('inputNombreSemestre').value.trim();
+    const archivo = document.getElementById('inputArchivo').files[0];
+
+    if (!nombreSemestre) { mostrarMensajeModal('Escribe un nombre para el semestre (ej: 2026-2).', 'error'); return; }
+    if (!archivo) { mostrarMensajeModal('Selecciona un archivo .csv o .xlsx.', 'error'); return; }
+
+    mostrarMensajeModal('Leyendo y procesando el archivo...', 'cargando');
+    try {
+        const materiasParsed = await parseArchivoCronograma(archivo);
+        if (materiasParsed.length === 0) {
+            mostrarMensajeModal('No se encontraron materias. Revisa que el archivo tenga columnas de código, materia, grupo, día y horas.', 'error');
+            return;
+        }
+
+        mostrarMensajeModal('Guardando en Firebase...', 'cargando');
+        const semestreId = slugify(nombreSemestre);
+        const totalGrupos = materiasParsed.reduce((s, m) => s + m.grupos.length, 0);
+
+        await setDoc(doc(db, 'carreras', carreraActualId, 'semestres', semestreId), {
+            nombre: nombreSemestre,
+            creadoEn: serverTimestamp(),
+            materias: materiasParsed,
+            totalMaterias: materiasParsed.length,
+            totalGrupos: totalGrupos,
+            archivoOriginalNombre: archivo.name
+        });
+
+        mostrarMensajeModal(`✅ Guardado (${materiasParsed.length} materias, ${totalGrupos} grupos).`, 'ok');
+        setTimeout(() => {
+            modalOverlay.classList.remove('active');
+            cargarSemestres();
+        }, 900);
+    } catch (err) {
+        console.error(err);
+        mostrarMensajeModal('⚠️ Error al procesar/guardar: ' + err.message, 'error');
+    }
+});
+
+function mostrarMensajeModal(texto, tipo) {
+    msgEstadoModal.className = 'msg-estado ' + tipo;
+    msgEstadoModal.textContent = texto;
+}
+
+// ============================================================================
+// 5) PARSER — LEE CUALQUIER CSV/XLSX DE PROGRAMACIÓN ACADÉMICA
+//    Detecta las columnas por su NOMBRE de encabezado (no por posición),
+//    así que sirve sin importar el orden de las columnas ni la carrera,
+//    siempre que existan columnas reconocibles de código, materia, grupo,
+//    día, horas y docente.
+// ============================================================================
+const ALIAS_COLUMNAS = {
+    codigo:    ['codigo', 'cod', 'cod materia', 'codigo materia', 'codigo asignatura', 'codigo curso'],
+    asignatura:['asignatura', 'materia', 'nombre materia', 'nombre asignatura', 'nombre curso', 'nombre', 'curso'],
+    grupo:     ['grupo', 'no grupo', 'grupo no', 'numero grupo', 'grupo numero', 'nrc'],
+    dia:       ['dia'],
+    horaInicio:['hora inicio', 'horainicio', 'inicio', 'hora_inicio', 'hora de inicio'],
+    horaFinal: ['hora final', 'horafinal', 'fin', 'hora_final', 'hora fin', 'hora de finalizacion', 'hora de finalizacion '],
+    docente:   ['docente', 'profesor', 'docentes', 'profesores', 'docente(s)', 'profesor(es)', 'docente asignado']
+};
+
+function normalizarTexto(v) {
+    return (v === undefined || v === null) ? '' : String(v)
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
+// Busca en las primeras filas cuál es la fila de encabezados y arma un mapa
+// { codigo: indiceColumna, asignatura: indiceColumna, ... }
+function detectarColumnas(rows) {
+    const maxFilasABuscar = Math.min(rows.length, 10);
+    for (let i = 0; i < maxFilasABuscar; i++) {
+        const fila = rows[i].map(normalizarTexto);
+        const mapa = {};
+        for (const [campo, alias] of Object.entries(ALIAS_COLUMNAS)) {
+            const idx = fila.findIndex(celda => alias.includes(celda));
+            if (idx !== -1) mapa[campo] = idx;
+        }
+        // Consideramos que es la fila de encabezados si al menos reconocemos
+        // código/asignatura y día/horas — lo mínimo para armar el cronograma.
+        const tieneBasicos = (mapa.codigo !== undefined || mapa.asignatura !== undefined) &&
+                              (mapa.dia !== undefined);
+        if (tieneBasicos) return { filaEncabezado: i, mapa };
+    }
+    return null;
+}
+
+function parseArchivoCronograma(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('No se pudo leer el archivo'));
+        reader.onload = (e) => {
+            try {
+                const esCSV = file.name.toLowerCase().endsWith('.csv');
+                const wb = esCSV
+                    ? XLSX.read(e.target.result, { type: 'string' })
+                    : XLSX.read(e.target.result, { type: 'array' });
+                const sheet = wb.Sheets[wb.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+                resolve(convertirFilasAMaterias(rows));
+            } catch (err) {
+                reject(err);
+            }
+        };
+        if (file.name.toLowerCase().endsWith('.csv')) reader.readAsText(file, 'UTF-8');
+        else reader.readAsArrayBuffer(file);
     });
-    
+}
+
+function convertirFilasAMaterias(rows) {
+    const deteccion = detectarColumnas(rows);
+    if (!deteccion) {
+        throw new Error('No reconocí las columnas del archivo. Debe tener encabezados como "Código", "Asignatura", "Grupo", "Día", "Hora Inicio", "Hora Final" y "Docente" (en cualquier orden).');
+    }
+    const { filaEncabezado, mapa } = deteccion;
+    const get = (row, campo) => (mapa[campo] !== undefined) ? String(row[mapa[campo]] ?? '').trim() : '';
+
+    const materiasOut = [];
+    let curMateria = null;
+    let curGrupo = null;
+    let lastHorario = null;
+
+    for (let i = filaEncabezado + 1; i < rows.length; i++) {
+        const row = rows[i];
+        const codigo = get(row, 'codigo');
+        const nombre = get(row, 'asignatura');
+        const grupoTxt = get(row, 'grupo');
+        const dia = get(row, 'dia');
+        let hi = get(row, 'horaInicio');
+        let hf = get(row, 'horaFinal');
+        const docente = get(row, 'docente');
+
+        if (!codigo && !nombre && !grupoTxt && !dia) continue; // fila vacía separadora
+
+        // Si no hay columna de código en el archivo, usamos el nombre de la
+        // materia como identificador para agrupar.
+        const idMateria = codigo || nombre;
+
+        if (idMateria && (!curMateria || idMateria !== curMateria._id)) {
+            curMateria = { _id: idMateria, codigo: codigo || '—', nombre, grupos: [] };
+            materiasOut.push(curMateria);
+            curGrupo = null;
+        }
+        if (!curMateria) continue;
+
+        if (grupoTxt) {
+            const num = parseInt((grupoTxt.match(/\d+/) || ['1'])[0], 10);
+            curGrupo = { numero: num, horarios: [], profesor: docente };
+            curMateria.grupos.push(curGrupo);
+            lastHorario = null;
+        }
+
+        if (dia) {
+            if (!curGrupo) {
+                curGrupo = { numero: curMateria.grupos.length + 1, horarios: [], profesor: docente };
+                curMateria.grupos.push(curGrupo);
+            }
+            if ((!hi || !hf) && lastHorario) {
+                hi = hi || lastHorario.inicio;
+                hf = hf || lastHorario.fin;
+            }
+            const h = { dia, inicio: hi, fin: hf };
+            curGrupo.horarios.push(h);
+            lastHorario = h;
+        }
+        if (docente && curGrupo && !curGrupo.profesor) curGrupo.profesor = docente;
+    }
+    // Quita el campo interno _id antes de guardar (no formaba parte del formato original)
+    materiasOut.forEach(m => delete m._id);
+    return materiasOut;
+}
+
+// ============================================================================
+// 6) VISOR — MISMA LÓGICA DE SIEMPRE (búsqueda, filtros, acordeones, export)
+//    No se cambió el formato de datos ni el export, para no romper la SPA.
+// ============================================================================
+function categorizarMaterias(materiasArray) {
+    const categorias = { 'Talleres': [], 'Historia': [], 'Fundamentos': [], 'Fotografía': [], 'Énfasis': [], 'Optativas': [] };
+    materiasArray.forEach(materia => {
+        const n = materia.nombre.toLowerCase();
+        if (n.includes('taller')) categorias['Talleres'].push(materia);
+        else if (n.includes('historia')) categorias['Historia'].push(materia);
+        else if (n.includes('fundamentos')) categorias['Fundamentos'].push(materia);
+        else if (n.includes('fotografía')) categorias['Fotografía'].push(materia);
+        else if (n.includes('énfasis')) categorias['Énfasis'].push(materia);
+        else categorias['Optativas'].push(materia);
+    });
     return categorias;
 }
 
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', () => {
-            updateStats();
-            renderMaterias(materias);
-            setupEventListeners();
-        });
-
-        // Configurar event listeners
-function setupEventListeners() {
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', handleSearch);
-
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            filterButtons.forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            currentFilter = e.target.dataset.filter;
-            handleSearch();
-        });
-    });
-    
-    // Event delegation para acordeones de secciones
-    document.getElementById('results').addEventListener('click', (e) => {
-        // Click en header de sección
-        if (e.target.closest('.section-header')) {
-            const header = e.target.closest('.section-header');
-            const content = header.nextElementSibling;
-            header.classList.toggle('active');
-            content.classList.toggle('active');
-        }
-        
-        // Click en header de materia
-        if (e.target.closest('.materia-header')) {
-            const card = e.target.closest('.materia-card');
-            card.classList.toggle('expanded');
-        }
-    });
+function updateStats() {
+    const totalMaterias = materias.length;
+    const totalGrupos = materias.reduce((sum, m) => sum + m.grupos.length, 0);
+    document.getElementById('stats').innerHTML =
+        `📊 <strong>${totalMaterias}</strong> materias disponibles | 👥 <strong>${totalGrupos}</strong> grupos totales`;
 }
 
-        // Actualizar estadísticas
-        function updateStats() {
-            const totalMaterias = materias.length;
-            const totalGrupos = materias.reduce((sum, m) => sum + m.grupos.length, 0);
-            document.getElementById('stats').innerHTML = `
-                📊 <strong>${totalMaterias}</strong> materias disponibles | 
-                👥 <strong>${totalGrupos}</strong> grupos totales
-            `;
-        }
+function handleSearch() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    filteredMaterias = materias.filter(materia => {
+        const matchesSearch =
+            materia.codigo.toLowerCase().includes(searchTerm) ||
+            materia.nombre.toLowerCase().includes(searchTerm) ||
+            materia.grupos.some(g => (g.profesor || '').toLowerCase().includes(searchTerm));
+        let matchesCategory = true;
+        if (currentFilter !== 'all') matchesCategory = materia.nombre.toLowerCase().includes(currentFilter);
+        return matchesSearch && matchesCategory;
+    });
+    renderMaterias(filteredMaterias);
+}
 
-        // Buscar materias
-        function handleSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            filteredMaterias = materias.filter(materia => {
-                // Filtro de búsqueda
-                const matchesSearch = 
-                    materia.codigo.toLowerCase().includes(searchTerm) ||
-                    materia.nombre.toLowerCase().includes(searchTerm) ||
-                    materia.grupos.some(g => g.profesor.toLowerCase().includes(searchTerm));
-
-                // Filtro de categoría
-                let matchesCategory = true;
-                if (currentFilter !== 'all') {
-                    matchesCategory = materia.nombre.toLowerCase().includes(currentFilter);
-                }
-
-                return matchesSearch && matchesCategory;
-            });
-
-            renderMaterias(filteredMaterias);
-        }
-
-        // Renderizar materias
-      function renderMaterias(materiasToRender) {
+function renderMaterias(materiasToRender) {
     const resultsContainer = document.getElementById('results');
-    
     if (materiasToRender.length === 0) {
         resultsContainer.innerHTML = '<div class="no-results">😕 No se encontraron materias</div>';
         return;
     }
-
     const categorias = categorizarMaterias(materiasToRender);
-    
     resultsContainer.innerHTML = Object.entries(categorias)
-        .filter(([_, materias]) => materias.length > 0)
-        .map(([categoria, materias]) => `
+        .filter(([_, ms]) => ms.length > 0)
+        .map(([categoria, ms]) => `
             <div class="section">
                 <div class="section-header active">
-                    <div class="section-title">
-                        ${categoria}
-                        <span class="section-count">${materias.length}</span>
-                    </div>
+                    <div class="section-title">${categoria} <span class="section-count">${ms.length}</span></div>
                     <span class="section-arrow">▼</span>
                 </div>
                 <div class="section-content active">
                     <div class="results">
-                        ${materias.map(materia => `
+                        ${ms.map(materia => `
                             <div class="materia-card">
                                 <div class="materia-header">
                                     <div class="materia-info">
@@ -1262,7 +727,6 @@ function setupEventListeners() {
                                     </div>
                                     <span class="expand-icon">▼</span>
                                 </div>
-                                
                                 <div class="grupos-container">
                                     ${materia.grupos.map(grupo => `
                                         <div class="grupo">
@@ -1273,7 +737,7 @@ function setupEventListeners() {
                                                     <span class="hora">${h.inicio}${h.fin ? ' - ' + h.fin : ''}</span>
                                                 </div>
                                             `).join('')}
-                                            <div class="profesor">👨‍🏫 ${grupo.profesor}</div>
+                                            <div class="profesor">👨‍🏫 ${grupo.profesor || 'Por asignar'}</div>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -1284,6 +748,53 @@ function setupEventListeners() {
             </div>
         `).join('');
 }
-    </script>
+
+function setupEventListenersVisor() {
+    document.getElementById('searchInput').addEventListener('input', handleSearch);
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFilter = e.target.dataset.filter;
+            handleSearch();
+        });
+    });
+    document.getElementById('results').addEventListener('click', (e) => {
+        if (e.target.closest('.section-header')) {
+            const header = e.target.closest('.section-header');
+            const content = header.nextElementSibling;
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+        if (e.target.closest('.materia-header')) {
+            const card = e.target.closest('.materia-card');
+            card.classList.toggle('expanded');
+        }
+    });
+}
+
+// EXPORT — EXACTAMENTE IGUAL QUE SIEMPRE (mismo nombre de archivo y misma forma del JSON)
+window.downloadJSON = function () {
+    if (!materias.length) { alert('Abre primero un semestre para exportar su cronograma.'); return; }
+    const blob = new Blob([JSON.stringify(materias, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'horarios-' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('✅ Archivo JSON descargado. Ahora súbelo en el SPA.');
+};
+
+// ============================================================================
+// 7) ARRANQUE
+//    cargarCarreras() ya NO se llama aquí directamente: se dispara desde
+//    onAuthStateChanged (arriba) en cuanto el login anónimo se confirma,
+//    para evitar leer Firestore antes de estar autenticado.
+// ============================================================================
+listaCarrerasEl.className = 'estado-carga';
+listaCarrerasEl.textContent = 'Autenticando...';
+setupEventListenersVisor();
+</script>
 </body>
 </html>
